@@ -1,3 +1,17 @@
 
 //רינה סלפיתי - 209143098
 //קאסם חליליה - 207674227
+
+const num = 9
+//num = 30 prints 3 
+//num = 6 prints 2
+//num= 9 prints 1
+// Logical checks for the given conditions
+const result =
+  (num % 2 === 0 && num % 3 === 0 && num % 5 === 0) * 3 || // Divisible by 2, 3, and 5
+  ((num % 2 === 0 && num % 3 === 0 && num % 5 !== 0) ||
+    (num % 3 === 0 && num % 5 === 0 && num % 2 !== 0) ||
+    (num % 2 === 0 && num % 5 === 0 && num % 3 !== 0)) * 2 || // Divisible by 2 and 5 (but not 3) or Divisible by 3 and 5 (but not 2) or Divisible by 2 and 3(but not 5)
+  ((num % 2 === 0 || num % 5 === 0 || num % 3 === 0)) * 1; // Divisible by 2 or 5  or 3
+
+console.log(result);
