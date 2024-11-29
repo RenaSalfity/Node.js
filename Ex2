@@ -1,3 +1,15 @@
+for (let num = 1; num < 237; num++) {
+  let isPrime = true;
+  for (let i = 2; i < num && isPrime; i++) {
+    if (num % i === 0) {
+      isPrime = false;
+    }
+  }
+  if (isPrime) {
+    console.log(num);
+  }
+}
+
 
 //רינה סלפיתי - 209143098
 //קאסם חליליה - 207674227
