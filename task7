@@ -1,0 +1,82 @@
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Load users data from users.json
+const usersFilePath = path.join(__dirname, "users.json");
+let users = [];
+app.get("/", (req, res) => {
+  res.send('<h1> Home Page</h1><a href="/api/users">users</a>');
+});
+// Read and parse users.json
+fs.readFile(usersFilePath, "utf8", (err, data) => {
+  if (err) {
+    console.error("Error reading users.json:", err);
+    return;
+  }
+  users = JSON.parse(data);
+});
+
+// Route to return all users
+app.get("/api/users", (req, res) => {
+  res.json(users);
+});
+
+// Route to filter users by age range
+app.get("/api/users/filter", (req, res) => {
+  console.log("im in filter")
+  const minAge = parseInt(req.query.minAge);
+  const maxAge = parseInt(req.query.maxAge);
+console.log(minAge);
+console.log(maxAge);
+
+  if (isNaN(minAge) || isNaN(maxAge)) {
+    return res.status(400).send("Invalid query parameters");
+  }
+
+  const filteredUsers = users.filter((u) => u.age >= minAge && u.age <= maxAge);
+  res.json(filteredUsers);
+});
+
+// Route to return a user by ID
+app.get("/api/users/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+  const user = users.find((u) => u.id === userId);
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).send("User not found");
+  }
+});
+
+
+// Route to return HTML page with user details by ID
+app.get("/user/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+  const user = users.find((u) => u.id === userId);
+  if (user) {
+    res.send(`
+      <html>
+        <head>
+          <title>User Details</title>
+        </head>
+        <body>
+          <h1>User Details</h1>
+          <p><strong>ID:</strong> ${user.id}</p>
+          <p><strong>Name:</strong> ${user.name}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Age:</strong> ${user.age}</p>
+        </body>
+      </html>
+    `);
+  } else {
+    res.status(404).send("User not found");
+  }
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
